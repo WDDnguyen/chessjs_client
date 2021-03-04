@@ -1,17 +1,18 @@
 import Chessboard from 'chessboardjsx'
-import React, {useState, useEffect} from 'react'
+import React, {useEffect} from 'react'
+import {useSelector, useDispatch} from 'react-redux'
+import {setSelectSquare, resetSelectedSquare} from './reducers/selectSquareReducer'
+import {setHighlightSquares, resetHighlightSquares} from './reducers/highlightSquareReducer'
+import {updateFen} from './reducers/chessReducer'
 
 const Chess = require("chess.js")
 let chess
 
 const App = () => {
-  const [selectedSquare, setSelectedSquare] = useState(null)
-  const [highlightedSquares, setHighlightedSquares] = useState({})
-  const [fen, setFen] = useState('start')
-
-  const clearHighlightSquares = () => {
-    setHighlightedSquares({})
-  }
+  const dispatch = useDispatch()
+  const selectedSquare = useSelector(state => state.selectedSquare)
+  const highlightedSquares = useSelector(state => state.highlightSquares)
+  const fen = useSelector(state => state.fen)
 
   const highlightSquares = validMoves => {
     const squaresToHighlight = validMoves.map(move => move.to)
@@ -26,14 +27,14 @@ const App = () => {
         }
       }
     }, {})
-    setHighlightedSquares(highlightedSquares)
+    dispatch(setHighlightSquares(highlightedSquares))
   }
 
   const onSquareClick = square => {
     if (selectedSquare === null) {
       const validMoves = chess.moves({square: square, verbose: true}) 
       if (validMoves.length > 0) {
-        setSelectedSquare(square)
+        dispatch(setSelectSquare(square))
         highlightSquares(validMoves)
       }
       return null
@@ -42,10 +43,10 @@ const App = () => {
     console.log('To', square)
     const validMove = chess.move({from: selectedSquare, to: square})
     if (validMove) {
-      setFen(chess.fen())
+      dispatch(updateFen(chess.fen()))
     }
-    clearHighlightSquares()
-    setSelectedSquare(null)
+    dispatch(resetHighlightSquares())
+    dispatch(resetSelectedSquare())
   }
 
   const createChessGame = () => {

@@ -1,11 +1,20 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
-import {createStore} from 'redux'
+import selectSquareReducer from './reducers/selectSquareReducer'
+import highlightSquareReducer from './reducers/highlightSquareReducer'
+import chessReducer from './reducers/chessReducer'
+import {createStore, combineReducers} from 'redux'
 import {Provider} from 'react-redux'
 import App from './App'
 
-const store = createStore(() => console.log('Store'))
+const combinedReducer = combineReducers({
+  selectedSquare: selectSquareReducer,
+  highlightSquares: highlightSquareReducer,
+  fen: chessReducer
+})
+
+const store = createStore(combinedReducer)
 
 ReactDOM.render(
   <Provider store={store}>
