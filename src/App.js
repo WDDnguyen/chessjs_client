@@ -4,7 +4,7 @@ import {useSelector, useDispatch} from 'react-redux'
 import {setSelectSquare, resetSelectedSquare} from './reducers/selectSquareReducer'
 import {setHighlightSquares} from './reducers/highlightSquareReducer'
 import {updateFen} from './reducers/chessReducer'
-
+import HistoryTable from './components/HistoryTable'
 const Chess = require("chess.js")
 let chess
 
@@ -83,6 +83,8 @@ const App = () => {
 
   useEffect(createChessGame, [])
   const turn = fen === 'start' ? 'w' : fen.split(' ')[1]
+  const history = chess === undefined ? undefined : chess.history()
+  
   return (
     <div>
       <Chessboard 
@@ -91,6 +93,7 @@ const App = () => {
         onSquareClick={onSquareClick}
         squareStyles={highlightedSquares}/>
       <p>Turn: {turn}</p>
+      <HistoryTable history={history}/>
     </div>
   )
 }
