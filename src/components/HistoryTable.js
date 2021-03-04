@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { makeStyles } from '@material-ui/core/styles';
+import {withStyles, makeStyles} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -15,9 +15,28 @@ const HistoryTable = ({history}) => {
             minWidth: '540px',
             maxHeight: '200px',
             overflowY: 'auto'
-        }
+        },
+
     })
 
+    const StyledTableCell = withStyles((theme) => ({
+        head: {
+            backgroundColor: theme.palette.common.black,
+            color: theme.palette.common.white
+        },
+        body: {
+            fontSize: 18
+        }
+    }))(TableCell)
+
+    const StyledTableRow = withStyles((theme) => ({
+        root: {
+          '&:nth-of-type(odd)': {
+            backgroundColor: theme.palette.divider,
+          },
+        },
+    }))(TableRow);
+    
     const createRow = (turn, whiteMove, blackMove) => {
       return {t: turn, w: whiteMove, b: blackMove}
     }
@@ -45,19 +64,19 @@ const HistoryTable = ({history}) => {
         <Table size="small">
           <TableHead>
             <TableRow>
-                <TableCell>Turn</TableCell>
-                <TableCell>White</TableCell>
-                <TableCell>Black</TableCell>
+                <StyledTableCell>Turn</StyledTableCell>
+                <StyledTableCell>White</StyledTableCell>
+                <StyledTableCell>Black</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {rows.map((row) => {
               return(
-              <TableRow key={row.t}>
-                <TableCell>{row.t}</TableCell>
-                <TableCell>{row.w}</TableCell>
-                <TableCell>{row.b}</TableCell>
-              </TableRow>
+              <StyledTableRow key={row.t}>
+                <StyledTableCell>{row.t}</StyledTableCell>
+                <StyledTableCell>{row.w}</StyledTableCell>
+                <StyledTableCell>{row.b}</StyledTableCell>
+              </StyledTableRow>
               )
             })}
           </TableBody>
