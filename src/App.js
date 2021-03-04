@@ -5,6 +5,7 @@ import {setSelectSquare, resetSelectedSquare} from './reducers/selectSquareReduc
 import {setHighlightSquares} from './reducers/highlightSquareReducer'
 import {updateFen} from './reducers/chessReducer'
 import HistoryTable from './components/HistoryTable'
+import Grid from '@material-ui/core/Grid';
 const Chess = require("chess.js")
 let chess
 
@@ -86,15 +87,25 @@ const App = () => {
   const history = chess === undefined ? undefined : chess.history()
   
   return (
-    <div>
+    <Grid container justify="center" spacing={4}>
+      <Grid item>
       <Chessboard 
+        width={540}
         position={fen}
         draggable={false}
         onSquareClick={onSquareClick}
         squareStyles={highlightedSquares}/>
-      <p>Turn: {turn}</p>
-      <HistoryTable history={history}/>
-    </div>
+      </Grid>
+        <Grid xl={6}>
+          <div>
+            <p>Turn: {turn}</p>
+            <HistoryTable history={history}/>
+          </div>
+          <div>
+            <h1>CHAT</h1>
+          </div>
+          </Grid>
+    </Grid>
   )
 }
 
