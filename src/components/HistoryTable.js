@@ -15,16 +15,15 @@ const HistoryTable = ({history}) => {
             minWidth: '540px',
             height: '300px',
             overflowY: 'auto',
-            border: "2px solid black",
-            marginBottom: "5px",
-            marginTop: "5px"
-        },
-
+            border: "1px solid black",
+            borderRadius: "5px",
+            marginBottom: "5px"
+        }
     })
 
     const StyledTableCell = withStyles((theme) => ({
         head: {
-            backgroundColor: theme.palette.common.black,
+            backgroundColor: theme.palette.primary.main,
             color: theme.palette.common.white
         },
         body: {

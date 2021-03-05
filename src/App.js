@@ -1,5 +1,6 @@
 import Chessboard from 'chessboardjsx'
 import React, {useEffect} from 'react'
+import {makeStyles} from '@material-ui/core/styles';
 import {useSelector, useDispatch} from 'react-redux'
 import {setSelectSquare, resetSelectedSquare} from './reducers/selectSquareReducer'
 import {setHighlightSquares} from './reducers/highlightSquareReducer'
@@ -7,6 +8,8 @@ import {updateFen} from './reducers/chessReducer'
 import HistoryTable from './components/HistoryTable'
 import ChatBox from './components/ChatBox'
 import Grid from '@material-ui/core/Grid';
+import NavBar from './components/NavBar'
+
 const Chess = require("chess.js")
 let chess
 
@@ -16,6 +19,11 @@ const App = () => {
   const highlightedSquares = useSelector(state => state.highlightSquares)
   const fen = useSelector(state => state.fen)
 
+  const useStyles = makeStyles(() => ({
+    root: {
+        width: '540px'
+    }
+  }))
   const highlightPotentialMoves = (validMoves) => {
     const highlightedSquares = [...validMoves].reduce((acc, cur) => {
       if (cur.flags === 'c') {
@@ -86,26 +94,33 @@ const App = () => {
   useEffect(createChessGame, [])
   const turn = fen === 'start' ? 'w' : fen.split(' ')[1]
   const history = chess === undefined ? undefined : chess.history()
-  
+  const classes = useStyles()
   return (
     <Grid container justify="center" spacing={4}>
-      <Grid item>
-        <Chessboard 
-          width={540}
-          position={fen}
-          draggable={false}
-          onSquareClick={onSquareClick}
-          squareStyles={highlightedSquares}/>
+      <Grid item xs={12}>
+        <NavBar/>
       </Grid>
-        <Grid xl={6}>
-          <div>
-            <p>Turn: {turn}</p>
-            <HistoryTable history={history}/>
-          </div>
-          <div>
-            <ChatBox/>
-          </div>
+      <Grid item>
+        <Grid container justify="center" spacing={4}>
+          <Grid item>
+            <div className={classes.root}>
+              <p>Turn: {turn}</p>
+              <Chessboard 
+                width={540}
+                position={fen}
+                draggable={false}
+                onSquareClick={onSquareClick}
+                squareStyles={highlightedSquares}/>
+            </div>
           </Grid>
+            <Grid item xl={6}>
+              <div className={classes.root}>
+                <HistoryTable history={history}/>
+                <ChatBox/>
+              </div>
+            </Grid>
+        </Grid>
+      </Grid>
     </Grid>
   )
 }

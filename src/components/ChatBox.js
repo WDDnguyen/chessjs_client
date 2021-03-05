@@ -18,17 +18,13 @@ const ChatBox = () => {
 
     const useStyles = makeStyles(() => ({
         root: {
-            weight: '540px',
             height: '400px',
         },
         messageArea: {
-            weight: '540px',
             height: '300px',
             overflow: 'auto',
             border: "2px solid black",
-            borderRadius: "5px",
-            position: "relative",
-            bottom: "0"
+            borderRadius: "5px"
         },
         messageBox: {
             height:'60px',
