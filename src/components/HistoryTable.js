@@ -13,8 +13,11 @@ const HistoryTable = ({history}) => {
     const useStyles = makeStyles({
         table: {
             minWidth: '540px',
-            maxHeight: '200px',
-            overflowY: 'auto'
+            height: '300px',
+            overflowY: 'auto',
+            border: "2px solid black",
+            marginBottom: "5px",
+            marginTop: "5px"
         },
 
     })
@@ -56,7 +59,6 @@ const HistoryTable = ({history}) => {
     }
 
     const rows = splitHistoryToRows(history)
-
     const classes = useStyles()
 
     return (

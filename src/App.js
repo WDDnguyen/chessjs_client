@@ -5,6 +5,7 @@ import {setSelectSquare, resetSelectedSquare} from './reducers/selectSquareReduc
 import {setHighlightSquares} from './reducers/highlightSquareReducer'
 import {updateFen} from './reducers/chessReducer'
 import HistoryTable from './components/HistoryTable'
+import ChatBox from './components/ChatBox'
 import Grid from '@material-ui/core/Grid';
 const Chess = require("chess.js")
 let chess
@@ -89,12 +90,12 @@ const App = () => {
   return (
     <Grid container justify="center" spacing={4}>
       <Grid item>
-      <Chessboard 
-        width={540}
-        position={fen}
-        draggable={false}
-        onSquareClick={onSquareClick}
-        squareStyles={highlightedSquares}/>
+        <Chessboard 
+          width={540}
+          position={fen}
+          draggable={false}
+          onSquareClick={onSquareClick}
+          squareStyles={highlightedSquares}/>
       </Grid>
         <Grid xl={6}>
           <div>
@@ -102,7 +103,7 @@ const App = () => {
             <HistoryTable history={history}/>
           </div>
           <div>
-            <h1>CHAT</h1>
+            <ChatBox/>
           </div>
           </Grid>
     </Grid>
