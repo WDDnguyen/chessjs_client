@@ -3,12 +3,13 @@ import React, {useEffect} from 'react'
 import {makeStyles} from '@material-ui/core/styles';
 import {useSelector, useDispatch} from 'react-redux'
 import {setSelectSquare, resetSelectedSquare} from './reducers/selectSquareReducer'
-import {setHighlightSquares} from './reducers/highlightSquareReducer'
+import {setHighlightSquares, resetHighlightSquares} from './reducers/highlightSquareReducer'
 import {updateFen} from './reducers/chessReducer'
 import HistoryTable from './components/HistoryTable'
 import ChatBox from './components/ChatBox'
 import Grid from '@material-ui/core/Grid';
 import NavBar from './components/NavBar'
+import Typography from '@material-ui/core/Typography'
 
 const Chess = require("chess.js")
 let chess
@@ -22,6 +23,9 @@ const App = () => {
   const useStyles = makeStyles(() => ({
     root: {
         width: '540px'
+    },
+    turn : {
+      textAlign: 'center'
     }
   }))
   const highlightPotentialMoves = (validMoves) => {
@@ -83,6 +87,8 @@ const App = () => {
     if (validMove) {
       dispatch(updateFen(chess.fen()))
       highlightMove(validMove)
+    } else {
+      dispatch(resetHighlightSquares())
     }
     dispatch(resetSelectedSquare())
   }
@@ -104,7 +110,9 @@ const App = () => {
         <Grid container justify="center" spacing={4}>
           <Grid item>
             <div className={classes.root}>
-              <p>Turn: {turn}</p>
+              <Typography variant="h4" className={classes.turn}>
+                Turn: {turn}
+              </Typography>
               <Chessboard 
                 width={540}
                 position={fen}
