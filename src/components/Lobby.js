@@ -1,7 +1,8 @@
-import React from 'react'
+import React, {useContext, useCallback, useEffect} from 'react'
 import {makeStyles} from '@material-ui/core/styles'
 import {useSelector, useDispatch} from 'react-redux'
-import {setNewRoomPlayerSide, setNewRoomName, setNewRoomOwner} from '../reducers/lobbyReducer'
+import {setNewRoomPlayerSide, setNewRoomName, setNewRoomOwner, setAvailableRooms} from '../reducers/lobbyReducer'
+import {setJoinedRoom, resetJoinedRoom} from '../reducers/lobbyReducer'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import List from '@material-ui/core/List'
@@ -13,12 +14,15 @@ import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import InputLabel from '@material-ui/core/InputLabel'
 import AddBoxIcon from '@material-ui/icons/AddBox'
+import { SocketContext } from '../services/socket';
 
 const Lobby = () => {
+    const socket = useContext(SocketContext)
     const dispatch = useDispatch()
     const rooms = useSelector(state => state.lobby.rooms)
-    const newRoom = useSelector(state => state.lobby.newRoom)
-
+    const newRoomInfo = useSelector(state => state.lobby.newRoomInfo)
+    const user = "anonymous"
+    
     const useStyles = makeStyles((theme) => ({
         form: {
           width: '100%', // Fix IE 11 issue.
@@ -39,12 +43,15 @@ const Lobby = () => {
     }))
 
     const handleJoinGame = room => {
-        console.log(`Joined room ${room}`)
+        console.log(`Joined room ${room.roomName}`)
+        dispatch(setJoinedRoom())
     }
 
     const handleCreateRoom = (event) => {
         event.preventDefault()
-        dispatch(setNewRoomOwner('player'))
+        console.log(newRoomInfo)
+        socket.emit("create_room", newRoomInfo)
+        console.log('CREATE ROOM')
     }
 
     const handleSideChange = (event) => {
@@ -54,6 +61,24 @@ const Lobby = () => {
     const handleRoomNameChange = (event) => {
         dispatch(setNewRoomName(event.target.value))
     }
+
+    const setupRoom = () => {
+        dispatch(setNewRoomOwner(user))
+
+        socket.on("available_rooms", (rooms) => {
+            dispatch(setAvailableRooms(rooms))
+        })
+
+        socket.on('join_room_accepted', () => {
+
+        })
+
+        return () => {
+            socket.disconnect()
+        } 
+    }
+
+    useEffect(setupRoom, [socket, dispatch])
 
     const classes = useStyles()
 
@@ -66,13 +91,13 @@ const Lobby = () => {
                         placeholder="roomName"
                         label="Room Name"
                         onChange={handleRoomNameChange}
-                        value={newRoom.roomName}
+                        value={newRoomInfo.roomName}
                     />
                     <FormControl variant="outlined" className={classes.formControl}>
                         <InputLabel htmlFor="outlined-age-native-simple">Side</InputLabel>
                         <Select
                             native
-                            value={newRoom.side}
+                            value={newRoomInfo.side}
                             onChange={handleSideChange}
                             label="Side"
                         >
@@ -100,7 +125,7 @@ const Lobby = () => {
                     {rooms.map(room => {
                         return (
                             <ListItem key={room.id} button onClick={() => handleJoinGame(room)}>
-                                <ListItemText primary={room.name} secondary={room.player}/>
+                                <ListItemText primary={room.roomName} secondary={room.roomOwner}/>
                             </ListItem>
                         )
                     })}

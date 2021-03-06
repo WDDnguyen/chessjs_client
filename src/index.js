@@ -8,6 +8,7 @@ import chatReducer from './reducers/chatReducer'
 import lobbyReducer from './reducers/lobbyReducer'
 import {createStore, combineReducers} from 'redux'
 import {Provider} from 'react-redux'
+import {SocketContext, socket} from './services/socket'
 import App from './App'
 
 const combinedReducer = combineReducers({
@@ -22,7 +23,9 @@ const store = createStore(combinedReducer)
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <SocketContext.Provider value={socket}>
+      <App />
+    </SocketContext.Provider>
   </Provider>,
   document.getElementById('root')
 );
