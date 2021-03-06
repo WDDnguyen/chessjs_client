@@ -2,6 +2,7 @@
 import React from 'react'
 import NavBar from './components/NavBar'
 import ChessGame from './components/ChessGame'
+import Lobby from './components/Lobby'
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom"
 
 const App = () => {
@@ -14,7 +15,7 @@ const App = () => {
           <ChessGame/>
         </Route>
         <Route path="/">
-          <h1>ROOM LIST</h1>
+          <Lobby/>
         </Route>
       </Switch>
     </Router>

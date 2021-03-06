@@ -11,7 +11,8 @@ const NavBar = () => {
         root: {
           flexGrow: 1,
           display: 'flex',
-          justifyContent:'flex-end'
+          justifyContent:'flex-end',
+          marginBottom: '10px'
         },
         titleButton: {
           marginRight: theme.spacing(2),
@@ -26,8 +27,6 @@ const NavBar = () => {
                 color: '#00F'
             }
         }
-
-
       }));
       
     const classes = useStyles();

@@ -80,6 +80,7 @@ const ChatBox = () => {
                     className={classes.messageBoxSend}
                     color="primary" 
                     endIcon={<SendIcon />}
+                    type="submit"
                 >
                     send
                 </Button>
