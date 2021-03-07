@@ -1,4 +1,4 @@
-const lobbyReducer = (lobby = {rooms: [], roomJoined: {}, newRoomInfo: {side: 'white'}}, action) => {
+const lobbyReducer = (lobby = {rooms: [], roomJoined: null, newRoomInfo: {side: 'white'}}, action) => {
     switch (action.type) {
         case 'SET_NEW_ROOM_PLAYER_SIDE':
             return {
@@ -9,6 +9,7 @@ const lobbyReducer = (lobby = {rooms: [], roomJoined: {}, newRoomInfo: {side: 'w
                 }
             }
         case 'SET_ROOM_JOINED':
+            console.log("SET ROOM JOINED ", action.joinedRoom)
             return {
                 ...lobby,
                 joinedRoom: action.joinedRoom
@@ -16,7 +17,7 @@ const lobbyReducer = (lobby = {rooms: [], roomJoined: {}, newRoomInfo: {side: 'w
         case 'RESET_ROOM_JOINED' :
             return {
                 ...lobby,
-                joinedRoom: {}
+                joinedRoom: null
             }
         case 'SET_AVAILABLE_ROOMS':
             return {

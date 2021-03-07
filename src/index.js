@@ -14,7 +14,7 @@ import App from './App'
 const combinedReducer = combineReducers({
   selectedSquare: selectSquareReducer,
   highlightSquares: highlightSquareReducer,
-  fen: chessReducer,
+  chess: chessReducer,
   chat: chatReducer,
   lobby: lobbyReducer
 })

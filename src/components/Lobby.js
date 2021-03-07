@@ -50,8 +50,6 @@ const Lobby = () => {
     }))
 
     const handleJoinGame = roomName => {
-        console.log(`Joined room ${roomName}`)
-        dispatch(setRoomJoined(roomName))
         socket.emit('join_room', {roomName, user})
     }
 
@@ -73,6 +71,11 @@ const Lobby = () => {
             dispatch(setAvailableRooms(rooms))
         })
 
+        socket.on('create_room_accepted', ({newRoomId}) => {
+            console.log(newRoomId)
+            dispatch(setRoomJoined(newRoomId))
+        })
+
         socket.on('join_room_accepted', ({roomName}) => {
             dispatch(setRoomJoined(roomName))
         })
@@ -80,10 +83,6 @@ const Lobby = () => {
         socket.on('play_chess_game', ({roomName}) => {
             history.push(`/game/${roomName}`)
         })
-
-        return () => {
-            socket.disconnect()
-        }
     }
 
     useEffect(setupRoom, [socket, dispatch, history])
