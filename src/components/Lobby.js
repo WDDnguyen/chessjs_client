@@ -15,11 +15,13 @@ import InputLabel from '@material-ui/core/InputLabel'
 import AddBoxIcon from '@material-ui/icons/AddBox'
 import { SocketContext } from '../services/socket'
 import {nanoid} from 'nanoid'
+import {useHistory} from "react-router-dom"
 
 const userId = nanoid(6)
 
 const Lobby = () => {
     const socket = useContext(SocketContext)
+    const history = useHistory()
     const dispatch = useDispatch()
     const rooms = useSelector(state => state.lobby.rooms)
     const newRoomInfo = useSelector(state => state.lobby.newRoomInfo)
@@ -50,7 +52,7 @@ const Lobby = () => {
     const handleJoinGame = room => {
         console.log(`Joined room ${room.roomName}`)
         dispatch(setJoinedRoom())
-        //socket.emit('join_room', )
+        socket.emit('join_room', {room, user})
     }
 
     const handleCreateRoom = (event) => {
@@ -64,12 +66,19 @@ const Lobby = () => {
 
     const setupRoom = () => {
 
+        socket.on('connect', () => {
+            socket.emit('available_rooms')
+        })
         socket.on("available_rooms", (rooms) => {
             dispatch(setAvailableRooms(rooms))
         })
 
         socket.on('join_room_accepted', () => {
+            dispatch(setJoinedRoom())
+        })
 
+        socket.on('play_chess_game', ({roomName}) => {
+            history.push(`/game/${roomName}`)
         })
 
         return () => {
@@ -77,7 +86,7 @@ const Lobby = () => {
         }
     }
 
-    useEffect(setupRoom, [socket, dispatch])
+    useEffect(setupRoom, [socket, dispatch, history])
 
     const classes = useStyles()
 
