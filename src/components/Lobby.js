@@ -14,10 +14,7 @@ import Select from '@material-ui/core/Select'
 import InputLabel from '@material-ui/core/InputLabel'
 import AddBoxIcon from '@material-ui/icons/AddBox'
 import { SocketContext } from '../services/socket'
-import {nanoid} from 'nanoid'
 import {useHistory} from "react-router-dom"
-
-const userId = nanoid(6)
 
 const Lobby = () => {
     const socket = useContext(SocketContext)
@@ -25,10 +22,7 @@ const Lobby = () => {
     const dispatch = useDispatch()
     const rooms = useSelector(state => state.lobby.rooms)
     const newRoomInfo = useSelector(state => state.lobby.newRoomInfo)
-    const user = {
-        userName: 'anonymous',
-        userId: userId
-    }
+    const user = useSelector(state => state.user)
 
     const useStyles = makeStyles((theme) => ({
         form: {
@@ -72,7 +66,6 @@ const Lobby = () => {
         })
 
         socket.on('create_room_accepted', ({newRoomId}) => {
-            console.log(newRoomId)
             dispatch(setRoomJoined(newRoomId))
         })
 

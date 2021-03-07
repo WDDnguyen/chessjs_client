@@ -6,6 +6,7 @@ import highlightSquareReducer from './reducers/highlightSquareReducer'
 import chessReducer from './reducers/chessReducer'
 import chatReducer from './reducers/chatReducer'
 import lobbyReducer from './reducers/lobbyReducer'
+import userReducer from './reducers/userReducer'
 import {createStore, combineReducers} from 'redux'
 import {Provider} from 'react-redux'
 import {SocketContext, socket} from './services/socket'
@@ -16,7 +17,8 @@ const combinedReducer = combineReducers({
   highlightSquares: highlightSquareReducer,
   chess: chessReducer,
   chat: chatReducer,
-  lobby: lobbyReducer
+  lobby: lobbyReducer,
+  user: userReducer
 })
 
 const store = createStore(combinedReducer)

@@ -1,4 +1,4 @@
-const chatReducer = (chat = {message: '', messageLog: []}, action) => {
+const chatReducer = (chat = {message: '', gameLog: []}, action) => {
     switch (action.type) {
         case 'SET_CHAT_MESSAGE':
             return {
@@ -10,11 +10,10 @@ const chatReducer = (chat = {message: '', messageLog: []}, action) => {
                 ...chat,
                 message: ''
             }
-        case 'ADD_MESSAGE':
-            const updatedMessageLog = chat.messageLog.concat(action.message)
+        case 'UPDATE_CHAT_LOG':
             return {
                 ...chat,
-                messageLog: updatedMessageLog 
+                gameLog: action.gameLog
             }
         default:
             return chat
@@ -34,10 +33,10 @@ export const resetChatMessage = () => {
     }
 }
 
-export const addMessageToLog = message => {
+export const updateChatLog = gameLog => {
     return {
-        type: 'ADD_MESSAGE',
-        message: message
+        type: 'UPDATE_CHAT_LOG',
+        gameLog: gameLog
     }
 }
 

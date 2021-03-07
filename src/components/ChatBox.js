@@ -1,5 +1,5 @@
 
-import React from 'react'
+import React, {useContext, useEffect} from 'react'
 import {makeStyles} from '@material-ui/core/styles';
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -8,13 +8,16 @@ import Button from '@material-ui/core/Button'
 import SendIcon from '@material-ui/icons/Send';
 import TextField from '@material-ui/core/TextField'
 import {useSelector, useDispatch} from 'react-redux'
-import {setChatMessage, resetChatMessage, addMessageToLog} from '../reducers/chatReducer'
+import {setChatMessage, resetChatMessage, updateChatLog} from '../reducers/chatReducer'
+import { SocketContext } from '../services/socket'
 
 const ChatBox = () => {
-
+    const socket = useContext(SocketContext)
     const dispatch = useDispatch()
+    const user = useSelector(state => state.user)
+    const roomId = useSelector(state => state.lobby.joinedRoom)
     const message = useSelector(state => state.chat.message)
-    const messageLog = useSelector(state => state.chat.messageLog)
+    const gameLog = useSelector(state => state.chat.gameLog)
 
     const useStyles = makeStyles(() => ({
         root: {
@@ -48,20 +51,29 @@ const ChatBox = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        dispatch(addMessageToLog(message))
+        socket.emit('message', {roomId, user, message})
         dispatch(resetChatMessage())
     }
 
     const classes = useStyles()
 
+    const setupChat = () => {
+        socket.emit('request_game_log', {roomId})
+        socket.on('game_log', ({gameLog}) => {
+            dispatch(updateChatLog(gameLog))
+        })
+    }
+
+    useEffect(setupChat, [socket, dispatch, message, roomId, user])
+
     return (
         <div className={classes.root}>
             <List dense className={classes.messageArea}>
-            {messageLog.map(msg => {
+            {gameLog.map(logItem => {
                 return (
-                    <ListItem key={msg}>
+                    <ListItem key={logItem}>
                         <ListItemText>
-                            {msg}
+                            {logItem}
                         </ListItemText>
                     </ListItem>
                 )
