@@ -9,7 +9,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
 const HistoryTable = ({history}) => {
-
     const useStyles = makeStyles({
         table: {
             minWidth: '540px',

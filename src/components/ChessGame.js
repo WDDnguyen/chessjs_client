@@ -4,7 +4,7 @@ import {makeStyles} from '@material-ui/core/styles'
 import {useSelector, useDispatch} from 'react-redux'
 import {setSelectSquare, resetSelectedSquare} from '../reducers/selectSquareReducer'
 import {setHighlightSquares, resetHighlightSquares} from '../reducers/highlightSquareReducer'
-import {updateFen, updateTurn, updateHistory, setPotentialMoves} from '../reducers/chessReducer'
+import {updateChessStatus} from '../reducers/chessReducer'
 import HistoryTable from './HistoryTable'
 import ChatBox from './ChatBox'
 import Grid from '@material-ui/core/Grid'
@@ -27,7 +27,7 @@ const ChessGame = () => {
             width: '540px'
         },
         turn : {
-        textAlign: 'center'
+          textAlign: 'center'
         }
     }))
 
@@ -79,7 +79,6 @@ const ChessGame = () => {
   const onSquareClick = (square) => {
     if (selectedSquare === null) {
       const squarePotentialMoves = potentialMoves.filter(move => move.from === square)
-      console.log('EMIT POTENTIAL MOVES', squarePotentialMoves)
       if (squarePotentialMoves.length > 0) {
         dispatch(setSelectSquare(square))
         highlightPotentialMoves(squarePotentialMoves)
@@ -98,15 +97,11 @@ const ChessGame = () => {
   }
 
   const setupGame = () => {
-    console.log('SETUP GAME ROOM ID', roomId)
     socket.emit('chess_state', {roomId})
-  
-    socket.on('chess_state', ({fen, turn, history, potentialMoves}) => {
-      console.log('CHESS STATE', fen, turn, history, potentialMoves)
-      dispatch(updateFen(fen))
-      dispatch(updateTurn(turn))
-      dispatch(updateHistory(history))
-      dispatch(setPotentialMoves(potentialMoves))
+
+    socket.on('chess_state', (chessStatus) => {
+      console.log('CHESS STATE', chessStatus.fen, chessStatus.turn, chessStatus.history, chessStatus.potentialMoves)
+      dispatch(updateChessStatus(chessStatus))
     })
   }
 
