@@ -1,20 +1,23 @@
 import Chessboard from 'chessboardjsx'
-import React, {useEffect} from 'react'
-import {makeStyles} from '@material-ui/core/styles';
+import React, {useContext, useEffect} from 'react'
+import {makeStyles} from '@material-ui/core/styles'
 import {useSelector, useDispatch} from 'react-redux'
 import {setSelectSquare, resetSelectedSquare} from '../reducers/selectSquareReducer'
 import {setHighlightSquares, resetHighlightSquares} from '../reducers/highlightSquareReducer'
 import {updateFen} from '../reducers/chessReducer'
 import HistoryTable from './HistoryTable'
 import ChatBox from './ChatBox'
-import Grid from '@material-ui/core/Grid';
+import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
+import { SocketContext } from '../services/socket'
 
 const Chess = require("chess.js")
 let chess
 
 const ChessGame = () => {
+    const socket = useContext(SocketContext)
     const dispatch = useDispatch()
+    const roomId = useSelector(state => state.lobby.joinedRoom)
     const selectedSquare = useSelector(state => state.selectedSquare)
     const highlightedSquares = useSelector(state => state.highlightSquares)
     const fen = useSelector(state => state.fen)

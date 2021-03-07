@@ -2,7 +2,7 @@ import React, {useContext, useEffect} from 'react'
 import {makeStyles} from '@material-ui/core/styles'
 import {useSelector, useDispatch} from 'react-redux'
 import {setNewRoomPlayerSide, setAvailableRooms} from '../reducers/lobbyReducer'
-import {setJoinedRoom} from '../reducers/lobbyReducer'
+import {setRoomJoined} from '../reducers/lobbyReducer'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import List from '@material-ui/core/List'
@@ -49,10 +49,10 @@ const Lobby = () => {
           }
     }))
 
-    const handleJoinGame = room => {
-        console.log(`Joined room ${room.roomName}`)
-        dispatch(setJoinedRoom())
-        socket.emit('join_room', {room, user})
+    const handleJoinGame = roomName => {
+        console.log(`Joined room ${roomName}`)
+        dispatch(setRoomJoined(roomName))
+        socket.emit('join_room', {roomName, user})
     }
 
     const handleCreateRoom = (event) => {
@@ -73,8 +73,8 @@ const Lobby = () => {
             dispatch(setAvailableRooms(rooms))
         })
 
-        socket.on('join_room_accepted', () => {
-            dispatch(setJoinedRoom())
+        socket.on('join_room_accepted', ({roomName}) => {
+            dispatch(setRoomJoined(roomName))
         })
 
         socket.on('play_chess_game', ({roomName}) => {
@@ -125,7 +125,7 @@ const Lobby = () => {
                 <List className={classes.list}>
                     {rooms.map(room => {
                         return (
-                            <ListItem key={room.roomName} button onClick={() => handleJoinGame(room)}>
+                            <ListItem key={room.roomName} button onClick={() => handleJoinGame(room.roomName)}>
                                 <ListItemText primary={room.roomOwner.userName} secondary={room.roomName}/>
                             </ListItem>
                         )
