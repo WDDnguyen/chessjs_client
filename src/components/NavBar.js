@@ -1,12 +1,15 @@
 import React from 'react';
-import {makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Button from '@material-ui/core/Button'
+import {makeStyles } from '@material-ui/core/styles'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
+import NavBarLogin from './NavBarLogin'
+import Typography from '@material-ui/core/Typography'
 import {Link} from "react-router-dom"
+import {useSelector} from 'react-redux'
 
 const NavBar = () => {
+    const user = useSelector(state => state.user)
     const useStyles = makeStyles((theme) => ({
         root: {
           flexGrow: 1,
@@ -14,11 +17,8 @@ const NavBar = () => {
           justifyContent:'flex-end',
           marginBottom: '10px'
         },
-        titleButton: {
-          marginRight: theme.spacing(2),
-        },
-        loginButton: {
-            marginLeft: 'auto'
+        navItem: {
+          marginRight: theme.spacing(4),
         },
         link: {
             color: theme.palette.background.paper,
@@ -27,20 +27,25 @@ const NavBar = () => {
                 color: '#00F'
             }
         }
-      }));
+      }))
       
     const classes = useStyles();
-    
+
     return (
         <div className={classes.root}>
           <AppBar position="static">
             <Toolbar>
-                <Link className={classes.link} to="/">
-                    <IconButton edge="start" className={classes.titleButton} color="inherit">
-                        ChessJS
+                <Typography className={classes.navItem} variant="h4">
+                  Chess JS
+                </Typography>
+                <Link className={classes.link} to="/lobby">
+                    <IconButton edge="start" className={classes.navItem} color="inherit">
+                        <Typography variant="h6">
+                          Lobby
+                        </Typography>
                     </IconButton>
                 </Link>
-              <Button className={classes.loginButton} color="inherit">Login</Button>
+              <NavBarLogin user={user} />
             </Toolbar>
           </AppBar>
         </div>

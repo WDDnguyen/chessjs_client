@@ -1,4 +1,4 @@
-const userReducer = (user = {userName: 'anonymous', userId: undefined}, action) => {
+const userReducer = (user = {userName: undefined}, action) => {
     switch (action.type) {
         case 'SET_USER':
             return action.user
