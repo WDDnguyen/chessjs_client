@@ -7,6 +7,7 @@ import {setHighlightSquares, resetHighlightSquares} from '../reducers/highlightS
 import {updateChessStatus} from '../reducers/chessReducer'
 import HistoryTable from './HistoryTable'
 import ChatBox from './ChatBox'
+import ChessStatusDisplay from './ChessStatusDisplay'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import { SocketContext } from '../services/socket'
@@ -21,6 +22,8 @@ const ChessGame = () => {
     const turn = useSelector(state => state.chess.turn)
     const potentialMoves = useSelector(state => state.chess.potentialMoves)
     const history = useSelector(state => state.chess.history)
+    const isGameOver = useSelector(state => state.chess.isGameOver)
+    const isChecked = useSelector(state => state.chess.isChecked)
   
     const useStyles = makeStyles(() => ({
         root: {
@@ -77,6 +80,10 @@ const ChessGame = () => {
   }
 
   const onSquareClick = (square) => {
+    if (isGameOver) {
+      return null
+    }
+
     if (selectedSquare === null) {
       const squarePotentialMoves = potentialMoves.filter(move => move.from === square)
       if (squarePotentialMoves.length > 0) {
@@ -100,7 +107,6 @@ const ChessGame = () => {
     socket.emit('chess_state', {roomId})
 
     socket.on('chess_state', (chessStatus) => {
-      console.log('CHESS STATE', chessStatus.fen, chessStatus.turn, chessStatus.history, chessStatus.potentialMoves)
       dispatch(updateChessStatus(chessStatus))
     })
   }
@@ -108,11 +114,11 @@ const ChessGame = () => {
   useEffect(setupGame, [socket, dispatch, roomId])
 
   const classes = useStyles()
-
   return (
       <Grid container justify="center" spacing={4}>
       <Grid item>
         <div className={classes.root}>
+          <ChessStatusDisplay isChecked={isChecked} isGameOver={isGameOver} turn={turn}/>
           <Typography variant="h4" className={classes.turn}>
             Turn: {turn}
           </Typography>

@@ -1,4 +1,13 @@
-const chessReducer = (updateChess = {fen: 'start', turn: 'w', history: undefined, potentialMoves: {}}, action) => {
+const initialChessStatus = {
+    fen: 'start',
+    turn: 'w',
+    history: undefined,
+    potentialMoves: {},
+    isChecked: false,
+    isGameOver: false
+}
+
+const chessReducer = (updateChess = initialChessStatus, action) => {
     switch (action.type) {
         case 'UPDATE_CHESS_STATUS':
             return action.chessStatus
