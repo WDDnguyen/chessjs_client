@@ -9,16 +9,16 @@ import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 import {Link} from 'react-router-dom'
-import axios from 'axios'
 import {useFormik} from 'formik'
+import {signUp} from '../services/sign'
 
 const SignupForm = () => {
 
     const validate = values => {
         const errors = {};
-        if (!values.username) {
-            errors.username = 'Required';
-        } 
+        if (!values.userName) {
+            errors.userName = 'Required';
+        }
         if (!values.password) {
             errors.password = 'Required';
         }
@@ -28,12 +28,12 @@ const SignupForm = () => {
 
     const formik = useFormik({
         initialValues: {
-            username: 'username',
+            userName: 'userName',
             password: ''
         },
         validate,
-        onSubmit: values => {
-            alert(JSON.stringify(values, null, 2))
+        onSubmit: async values => {
+            const response = await signUp(values)
         }
     })
 
@@ -76,9 +76,9 @@ const SignupForm = () => {
                 variant="outlined"
                 required
                 fullWidth
-                id="username"
-                label="username"
-                name="username"
+                id="userName"
+                label="userName"
+                name="userName"
                 value={formik.userName}
                 onChange={formik.handleChange}
               />
