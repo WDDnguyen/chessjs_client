@@ -21,12 +21,14 @@ const ChessGame = () => {
     const user = useSelector(state => state.user)
     const chessStatus = useSelector(state => state.chess)
     
-    const useStyles = makeStyles(() => ({
+    const useStyles = makeStyles((theme) => ({
         root: {
-            width: '540px'
+            width: '540px',
+            textAlign: 'center'
         },
-        currentPlayer : {
-          textAlign: 'center'
+        status: {
+            backgroundColor: theme.palette.primary.main,
+            color: theme.palette.common.white
         }
     }))
 
@@ -111,16 +113,16 @@ const ChessGame = () => {
 
   const classes = useStyles()
   return (
-      <Grid container justify="center" spacing={4}>
+      <Grid container className={classes.root} justify="center" spacing={4}>
       <Grid item>
-        <div className={classes.root}>
+        <div className={classes.status}>
           <ChessStatusDisplay 
             isChecked={chessStatus.isChecked}
             isGameOver={chessStatus.isGameOver}
             winner={chessStatus.winner}
             currentPlayer={chessStatus.currentPlayer}
           />
-          <Typography variant="h4" className={classes.currentPlayer}>
+          <Typography variant="h4">
             Turn: {chessStatus.currentPlayer}
           </Typography>
           <Chessboard 
@@ -132,10 +134,8 @@ const ChessGame = () => {
         </div>
       </Grid>
         <Grid item xl={6}>
-          <div className={classes.root}>
             <HistoryTable history={chessStatus.history}/>
             <ChatBox/>
-          </div>
         </Grid>
       </Grid>
   )
