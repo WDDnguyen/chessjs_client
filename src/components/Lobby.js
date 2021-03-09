@@ -89,8 +89,6 @@ const Lobby = () => {
         history.push('/')
     }
 
-    const availableRooms = user 
-
     return (
         <Grid container className={classes.root} justify="center" direction="column" alignItems="center">
             <Grid item>
