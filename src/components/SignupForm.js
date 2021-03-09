@@ -11,8 +11,13 @@ import Container from '@material-ui/core/Container'
 import {Link} from 'react-router-dom'
 import {useFormik} from 'formik'
 import {signUp} from '../services/sign'
+import {useHistory} from "react-router-dom"
+import {useDispatch} from 'react-redux'
+import {setUser} from '../reducers/userReducer'
 
 const SignupForm = () => {
+    const history = useHistory()
+    const dispatch = useDispatch()
 
     const validate = values => {
         const errors = {};
@@ -32,8 +37,20 @@ const SignupForm = () => {
             password: ''
         },
         validate,
-        onSubmit: async values => {
-            const response = await signUp(values)
+        onSubmit: async (values, actions) => {
+            try {
+                const response = await signUp(values)
+                console.log(response)
+                const newUser = {
+                    userName: response.data.userName
+                }
+                dispatch(setUser(newUser))
+                history.push('/lobby')
+            } catch (error) {
+                actions.setFieldError('general', error.response.data.message)
+            } finally {
+                actions.setSubmitting(false)
+            }
         }
     })
 
@@ -54,6 +71,9 @@ const SignupForm = () => {
         },
         submit: {
             margin: theme.spacing(3, 0, 2),
+        },
+        error: {
+            color: 'red'
         }
     }))
 
@@ -68,6 +88,9 @@ const SignupForm = () => {
         </Avatar>
         <Typography component="h1" variant="h5">
           Sign up
+        </Typography>
+        <Typography className={classes.error} component="h1" variant="h5">
+          {formik.errors.general}
         </Typography>
         <form className={classes.form} onSubmit={formik.handleSubmit}>
           <Grid container spacing={2}>
