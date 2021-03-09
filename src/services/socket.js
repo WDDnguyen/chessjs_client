@@ -1,6 +1,5 @@
 import React from 'react'
 import socketio from "socket.io-client"
-// import {SOCKET_URL} from "config"
 
-export const socket = socketio.connect('localhost:3001')
+export const socket = socketio.connect('https://rocky-inlet-25088.herokuapp.com/')
 export const SocketContext = React.createContext()
