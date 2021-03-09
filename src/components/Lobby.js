@@ -22,34 +22,36 @@ const Lobby = () => {
     const dispatch = useDispatch()
     const rooms = useSelector(state => state.lobby.rooms)
     const newRoomInfo = useSelector(state => state.lobby.newRoomInfo)
+    const roomJoined = useSelector(state => state.lobby.roomJoined)
     const user = useSelector(state => state.user)
 
     const useStyles = makeStyles((theme) => ({
-        form: {
+        root: {
           width: '100%', // Fix IE 11 issue.
           marginTop: theme.spacing(1),
-          border: '2px solid black'
+          textAlign: 'center',
         },
-        table: {
-            border: '2px solid black'
+        grid: {
+            marginTop: theme.spacing(2),
+            minWidth: 540
         },
-        list: {
-            textAlign :'center',
-            width: '540px'
-        },
-        formControl: {
-            margin: theme.spacing(1),
-            minWidth: 120,
-          }
+        colorStyle: {
+            backgroundColor: theme.palette.primary.main,
+            color: theme.palette.common.white
+        }
     }))
 
     const handleJoinGame = roomName => {
-        socket.emit('join_room', {roomName, user})
+        if (roomJoined === null) {
+            socket.emit('join_room', {roomName, user})
+        }
     }
 
     const handleCreateRoom = (event) => {
         event.preventDefault()
-        socket.emit("create_room", {newRoomInfo, user})
+        if (roomJoined === null) {
+            socket.emit("create_room", {newRoomInfo, user})
+        }
     }
 
     const handleSideChange = (event) => {
@@ -61,6 +63,7 @@ const Lobby = () => {
         socket.on('connect', () => {
             socket.emit('available_rooms')
         })
+
         socket.on("available_rooms", (rooms) => {
             dispatch(setAvailableRooms(rooms))
         })
@@ -86,47 +89,54 @@ const Lobby = () => {
         history.push('/')
     }
 
+    const availableRooms = user 
+
     return (
-        <Grid container justify="center" direction="column" alignItems="center">
+        <Grid container className={classes.root} justify="center" direction="column" alignItems="center">
             <Grid item>
-                <form className={classes.form} onSubmit={handleCreateRoom}>
-                    <FormControl variant="outlined" className={classes.formControl}>
-                        <InputLabel htmlFor="outlined-age-native-simple">Side</InputLabel>
-                        <Select
-                            native
-                            value={newRoomInfo.side}
-                            onChange={handleSideChange}
-                            label="Side"
+                    <Typography className={classes.colorStyle} variant="h4">
+                    Create Game 
+                    </Typography>
+                    <form onSubmit={handleCreateRoom}>
+                        <FormControl className={classes.grid} variant="outlined">
+                            <InputLabel htmlFor="outlined-age-native-simple">Side</InputLabel>
+                            <Select
+                                native
+                                value={newRoomInfo.side}
+                                onChange={handleSideChange}
+                                label="Side"
+                            >
+                                <option value='white'>White</option>
+                                <option value='black'>Black</option>    
+                            </Select>
+                        <Button 
+                            variant="contained"
+                            className={classes.formButton}
+                            color="primary" 
+                            endIcon={<AddBoxIcon />}
+                            type="submit"
                         >
-                            <option value='white'>White</option>
-                            <option value='black'>Black</option>    
-                        </Select>
-                    </FormControl> 
-                    <Button 
-                        variant="contained"
-                        color="primary" 
-                        endIcon={<AddBoxIcon />}
-                        type="submit"
-                    >
-                        create
-                    </Button>          
-                </form>
+                            create
+                        </Button>          
+                        </FormControl> 
+                    </form>
             </Grid>
-            <Grid item>
-                <Typography variant="h4">
-                    Available Rooms
-                </Typography>
-            </Grid>
-            <Grid item xs={6} className={classes.table}>
-                <List className={classes.list}>
-                    {rooms.map(room => {
-                        return (
-                            <ListItem key={room.roomName} button onClick={() => handleJoinGame(room.roomName)}>
-                                <ListItemText primary={room.roomOwner.userName} secondary={room.roomName}/>
-                            </ListItem>
-                        )
-                    })}
-                </List>
+            <Grid item className={classes.grid}>
+                <div>
+                    <Typography className={classes.colorStyle} variant="h4">
+                        Available Rooms
+                    </Typography>
+
+                    <List>
+                        {rooms.map(room => {
+                            return (
+                                <ListItem key={room.roomName} button onClick={() => handleJoinGame(room.roomName)}>
+                                    <ListItemText primary={room.roomOwner.userName} secondary={room.roomName}/>
+                                </ListItem>
+                            )
+                        })}
+                    </List>
+                </div>
             </Grid>
         </Grid>
     )

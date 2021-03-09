@@ -9,7 +9,6 @@ const lobbyReducer = (lobby = {rooms: [], roomJoined: null, newRoomInfo: {side: 
                 }
             }
         case 'SET_ROOM_JOINED':
-            console.log("SET ROOM JOINED ", action.joinedRoom)
             return {
                 ...lobby,
                 joinedRoom: action.joinedRoom
