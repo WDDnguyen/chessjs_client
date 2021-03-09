@@ -3,9 +3,10 @@ import {makeStyles} from '@material-ui/core/styles'
 import IconButton from '@material-ui/core/IconButton'
 import AccountCircle from '@material-ui/icons/AccountCircle'
 import Typography from '@material-ui/core/Typography'
+import {useHistory} from "react-router-dom"
 
 const NavBarLogin = ({user}) => {
-  
+  const history = useHistory()  
   const useStyles = makeStyles((theme) => ({
     loginButton: {
         marginLeft: 'auto',
@@ -13,6 +14,10 @@ const NavBarLogin = ({user}) => {
     }
   }))
   
+  const handleLoginButton = () => {
+    history.push('/signin')
+  }
+
   const classes = useStyles();
   console.log(user.userName)
   if (user.userName === undefined) {
@@ -20,6 +25,7 @@ const NavBarLogin = ({user}) => {
       <IconButton
         className={classes.loginButton}
         color="inherit"
+        onClick={handleLoginButton}
       >
         <Typography variant="h6">
           Login
