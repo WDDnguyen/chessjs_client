@@ -10,8 +10,14 @@ import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 import {Link} from 'react-router-dom'
 import {useFormik} from "formik"
+import {signIn} from '../services/sign'
+import {useHistory} from "react-router-dom"
+import {useDispatch} from 'react-redux'
+import {setUser} from '../reducers/userReducer'
 
 const SigninForm = () => {
+    const dispatch = useDispatch()
+    const history = useHistory()
 
     const useStyles = makeStyles((theme) => ({
         paper: {
@@ -31,12 +37,15 @@ const SigninForm = () => {
         submit: {
           margin: theme.spacing(3, 0, 2),
         },
+        error: {
+            color: 'red'
+        }
     }))
 
     const validate = values => {
         const errors = {};
-        if (!values.username) {
-            errors.username = 'Required';
+        if (!values.userName) {
+            errors.userName = 'Required';
         }
         if (!values.password) {
             errors.password = 'Required';
@@ -47,12 +56,24 @@ const SigninForm = () => {
 
     const formik = useFormik({
         initialValues: {
-            username: 'username',
+            userName: 'userName',
             password: ''
         },
         validate,
-        onSubmit: values => {
-            alert(JSON.stringify(values, null, 2))
+        onSubmit: async (values, actions) => {
+            try {
+                const response = await signIn(values)
+                console.log(response)
+                const user = {
+                    userName: response.data.userName
+                }
+                dispatch(setUser(user))
+                history.push('/lobby')
+            } catch (error) {
+                actions.setFieldError('general', error.response.data.message)
+            } finally {
+                actions.setSubmitting(false)
+            }
         }
     })
 
@@ -68,18 +89,21 @@ const SigninForm = () => {
             <Typography component="h1" variant="h5">
             Sign in
             </Typography>
+            <Typography className={classes.error} component="h1" variant="h5">
+                {formik.errors.general}
+            </Typography>
             <form className={classes.form} onSubmit={formik.handleSubmit}>
             <TextField
                 variant="outlined"
                 margin="normal"
                 required
                 fullWidth
-                id="username"
-                label="username"
-                name="username"
-                autoComplete="username"
+                id="userName"
+                label="userName"
+                name="userName"
+                autoComplete="userName"
                 autoFocus
-                value={formik.username}
+                value={formik.userName}
                 onChange={formik.handleChange}
             />
             <TextField

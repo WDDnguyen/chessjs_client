@@ -50,7 +50,7 @@ const HomePage = () => {
                         Play as Guest
                     </Button>
                 </Link>
-                <Link className={classes.link} to="/login">
+                <Link className={classes.link} to="/signin">
                     <Button 
                         variant="contained"
                         color="secondary" 

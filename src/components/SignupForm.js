@@ -40,7 +40,6 @@ const SignupForm = () => {
         onSubmit: async (values, actions) => {
             try {
                 const response = await signUp(values)
-                console.log(response)
                 const newUser = {
                     userName: response.data.userName
                 }
