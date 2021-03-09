@@ -82,6 +82,10 @@ const Lobby = () => {
 
     const classes = useStyles()
 
+    if (user === undefined || user.userName === undefined) {
+        history.push('/')
+    }
+
     return (
         <Grid container justify="center" direction="column" alignItems="center">
             <Grid item>
