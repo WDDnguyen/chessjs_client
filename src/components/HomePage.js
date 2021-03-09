@@ -13,12 +13,22 @@ const HomePage = () => {
     const dispatch = useDispatch()
 
     const useStyles = makeStyles((theme) => ({
+        root: {
+            textAlign: 'center',
+            height: '100vh'
+        },
         link: {
+            margin: theme.spacing(0, 2),
             color: theme.palette.background.paper,
             textDecoration: 'none',
             ':hover': {
                 color: '#00F'
             }
+        },
+        name: {
+            backgroundColor: theme.palette.primary.main,
+            color: theme.palette.common.white,
+            borderRadius: '30px'
         }
       }))
 
@@ -35,8 +45,9 @@ const HomePage = () => {
     const classes = useStyles()
     
     return (
-        <Grid container justify="center" direction="column" alignItems="center" spacing={2}>
-            <Grid item>
+
+        <Grid container className={classes.root} justify="center" direction="column" alignItems="center" spacing={8}>
+            <Grid item className={classes.name}>
                 <Typography variant="h1"> Online Chess JS </Typography>
             </Grid>
             <Grid item>
