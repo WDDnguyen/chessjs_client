@@ -18,15 +18,9 @@ const ChessGame = () => {
     const roomId = useSelector(state => state.lobby.joinedRoom)
     const selectedSquare = useSelector(state => state.selectedSquare)
     const highlightedSquares = useSelector(state => state.highlightSquares)
-    const currentPlayer = useSelector(state => state.chess.currentPlayer)
-    const winner = useSelector(state => state.chess.winner)
-    const fen = useSelector(state => state.chess.fen)
-    const potentialMoves = useSelector(state => state.chess.potentialMoves)
-    const history = useSelector(state => state.chess.history)
-    const isGameOver = useSelector(state => state.chess.isGameOver)
-    const isChecked = useSelector(state => state.chess.isChecked)
     const user = useSelector(state => state.user)
-  
+    const chessStatus = useSelector(state => state.chess)
+    
     const useStyles = makeStyles(() => ({
         root: {
             width: '540px'
@@ -82,12 +76,12 @@ const ChessGame = () => {
   }
 
   const onSquareClick = (square) => {
-    if (isGameOver || currentPlayer !== user.userName) {
+    if (chessStatus.isGameOver || chessStatus.currentPlayer !== user.userName) {
       return null
     }
 
     if (selectedSquare === null) {
-      const squarePotentialMoves = potentialMoves.filter(move => move.from === square)
+      const squarePotentialMoves = chessStatus.potentialMoves.filter(move => move.from === square)
       if (squarePotentialMoves.length > 0) {
         dispatch(setSelectSquare(square))
         highlightPotentialMoves(squarePotentialMoves)
@@ -95,7 +89,7 @@ const ChessGame = () => {
       return null
     }
 
-    const validMove = potentialMoves.find(move => move.from === selectedSquare && move.to === square)
+    const validMove = chessStatus.potentialMoves.find(move => move.from === selectedSquare && move.to === square)
     if (validMove) {
       highlightMove(validMove)
       socket.emit('move', {roomId, from: selectedSquare, to: square})
@@ -121,17 +115,17 @@ const ChessGame = () => {
       <Grid item>
         <div className={classes.root}>
           <ChessStatusDisplay 
-            isChecked={isChecked}
-            isGameOver={isGameOver}
-            winner={winner}
-            currentPlayer={currentPlayer}
+            isChecked={chessStatus.isChecked}
+            isGameOver={chessStatus.isGameOver}
+            winner={chessStatus.winner}
+            currentPlayer={chessStatus.currentPlayer}
           />
           <Typography variant="h4" className={classes.currentPlayer}>
-            Turn: {currentPlayer}
+            Turn: {chessStatus.currentPlayer}
           </Typography>
           <Chessboard 
             width={540}
-            position={fen}
+            position={chessStatus.fen}
             draggable={false}
             onSquareClick={onSquareClick}
             squareStyles={highlightedSquares}/>
@@ -139,7 +133,7 @@ const ChessGame = () => {
       </Grid>
         <Grid item xl={6}>
           <div className={classes.root}>
-            <HistoryTable history={history}/>
+            <HistoryTable history={chessStatus.history}/>
             <ChatBox/>
           </div>
         </Grid>
