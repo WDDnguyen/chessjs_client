@@ -18,18 +18,20 @@ const ChessGame = () => {
     const roomId = useSelector(state => state.lobby.joinedRoom)
     const selectedSquare = useSelector(state => state.selectedSquare)
     const highlightedSquares = useSelector(state => state.highlightSquares)
+    const currentPlayer = useSelector(state => state.chess.currentPlayer)
+    const winner = useSelector(state => state.chess.winner)
     const fen = useSelector(state => state.chess.fen)
-    const turn = useSelector(state => state.chess.turn)
     const potentialMoves = useSelector(state => state.chess.potentialMoves)
     const history = useSelector(state => state.chess.history)
     const isGameOver = useSelector(state => state.chess.isGameOver)
     const isChecked = useSelector(state => state.chess.isChecked)
+    const user = useSelector(state => state.user)
   
     const useStyles = makeStyles(() => ({
         root: {
             width: '540px'
         },
-        turn : {
+        currentPlayer : {
           textAlign: 'center'
         }
     }))
@@ -80,7 +82,7 @@ const ChessGame = () => {
   }
 
   const onSquareClick = (square) => {
-    if (isGameOver) {
+    if (isGameOver || currentPlayer !== user.userName) {
       return null
     }
 
@@ -118,9 +120,14 @@ const ChessGame = () => {
       <Grid container justify="center" spacing={4}>
       <Grid item>
         <div className={classes.root}>
-          <ChessStatusDisplay isChecked={isChecked} isGameOver={isGameOver} turn={turn}/>
-          <Typography variant="h4" className={classes.turn}>
-            Turn: {turn}
+          <ChessStatusDisplay 
+            isChecked={isChecked}
+            isGameOver={isGameOver}
+            winner={winner}
+            currentPlayer={currentPlayer}
+          />
+          <Typography variant="h4" className={classes.currentPlayer}>
+            Turn: {currentPlayer}
           </Typography>
           <Chessboard 
             width={540}

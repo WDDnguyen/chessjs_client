@@ -1,6 +1,7 @@
 const initialChessStatus = {
     fen: 'start',
-    turn: 'w',
+    currentPlayer: '',
+    winner: '',
     history: undefined,
     potentialMoves: {},
     isChecked: false,
