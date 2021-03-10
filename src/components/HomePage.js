@@ -48,7 +48,7 @@ const HomePage = () => {
 
         <Grid container className={classes.root} justify="center" direction="column" alignItems="center" spacing={8}>
             <Grid item className={classes.name}>
-                <Typography variant="h1"> Online Chess JS </Typography>
+                <Typography variant="h2"> Online Chess JS </Typography>
             </Grid>
             <Grid item>
                 <Link className={classes.link} to="/lobby" >
