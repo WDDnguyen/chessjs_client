@@ -19,7 +19,6 @@ const NavBarLogin = ({user}) => {
   }
 
   const classes = useStyles();
-  console.log(user.userName)
   if (user.userName === undefined) {
     return (
       <IconButton

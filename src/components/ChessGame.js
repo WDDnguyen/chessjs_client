@@ -121,7 +121,6 @@ const ChessGame = () => {
             isGameOver={chessStatus.isGameOver}
             winner={chessStatus.winner}
             currentPlayer={chessStatus.currentPlayer}
-            className={classes.status}
           />
           <Typography variant="h4" className={classes.status}>
             Turn: {chessStatus.currentPlayer}
